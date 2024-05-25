@@ -157,6 +157,7 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
 
         self.tableWidget_2.itemClicked.connect(self.item_clicked_table_2)
+        self.tableWidget.itemClicked.connect(self.item_clicked_table)
 
         QMetaObject.connectSlotsByName(MainWindow)
     # setupUi
@@ -178,13 +179,19 @@ class Ui_MainWindow(object):
         self.InputStockName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Type stock ticker here", None))
     # retranslateUi
 
-
+    def registerCallbacks(self, marketCallback, buttonCallback):
+        self.marketCallback = marketCallback
+        self.buttonCallback = buttonCallback
 
 
     def item_clicked_table_2(self, item):
         # Get the text of the clicked item
         text = item.text()
         self.marketName.setText(text)
+        self.marketCallback(self.marketName.text())
+    def item_clicked_table(self, item):
+        # Get the text of the clicked item
+        self.InputStockName.setText(item.text())
 
 
     def setMarketNames(self, df : pd.DataFrame):
@@ -196,3 +203,13 @@ class Ui_MainWindow(object):
             for j in range(num_cols):
                 item = QTableWidgetItem(str(df.iloc[i, j]))  # Convert each DataFrame cell to a QTableWidgetItem
                 self.tableWidget_2.setItem(i, j, item)
+
+    def setCompounds(self, df : pd.DataFrame):
+        num_rows, num_cols = df.shape
+        self.tableWidget.setRowCount(num_rows)
+        self.tableWidget.setColumnCount(num_cols)
+        self.tableWidget.setHorizontalHeaderLabels(df.columns.values)
+        for i in range(num_rows):
+            for j in range(num_cols):
+                item = QTableWidgetItem(str(df.iloc[i, j]))  # Convert each DataFrame cell to a QTableWidgetItem
+                self.tableWidget.setItem(i, j, item)
