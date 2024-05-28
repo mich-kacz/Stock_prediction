@@ -15,3 +15,7 @@ class DataDownloader:
         html = StringIO(r.text)
         df = pd.read_html(html)[0]
         return df[columns]
+    
+    def downloadCSV(self, url) -> pd.DataFrame:
+        df = pd.read_csv(url)
+        return df

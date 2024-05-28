@@ -156,11 +156,11 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
+        # setupUi
         self.tableWidget_2.itemClicked.connect(self.item_clicked_table_2)
         self.tableWidget.itemClicked.connect(self.item_clicked_table)
-
+        self.NextButton.clicked.connect(self.nextButtonCLicked)
         QMetaObject.connectSlotsByName(MainWindow)
-    # setupUi
 
     def retranslateUi(self, MainWindow):
         MainWindow.setWindowTitle(QCoreApplication.translate("MainWindow", u"MainWindow", None))
@@ -192,6 +192,9 @@ class Ui_MainWindow(object):
     def item_clicked_table(self, item):
         # Get the text of the clicked item
         self.InputStockName.setText(item.text())
+    def nextButtonCLicked(self):
+        if(self.InputStockName.text() != ""):
+            self.buttonCallback(self.InputStockName.text())
 
 
     def setMarketNames(self, df : pd.DataFrame):

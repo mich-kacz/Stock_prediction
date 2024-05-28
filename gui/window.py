@@ -1,4 +1,5 @@
 import sys
+from PySide6.QtGui import QCloseEvent
 import pandas as pd
 from dataHandler.dataset import Dataset
 
@@ -17,24 +18,32 @@ class MainWindow(QMainWindow):
         self.eventCallback = eventCallback
         self.marketName = None
         self.TickersForMarket = None
+        self.stockName = None
 
     def run(self):
-
         #window = MainWindow(marketNames)
         self.show()
-
         sys.exit(self.app.exec())
+
+    #@override
+    def closeEvent(self, event: QCloseEvent) -> None:
+        super().closeEvent(event)
+        self.eventCallback("Closing")
+        
 
     def tableCallback(self, item):
         self.marketName = item
         self.eventCallback("MarketClick")
         self.ui.setCompounds(self.TickersForMarket)
 
-    def buttonCallback(self):
-        pass
+    def buttonCallback(self, item):
+        self.stockName = item
+        self.eventCallback("StockChoosen")
 
     def getChoosenMarket(self):
         return self.marketName
+    def getChoosenStock(self):
+        return self.stockName
     def setTickersForMarket(self, tickers : pd.DataFrame):
         self.TickersForMarket = tickers
     
