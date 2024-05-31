@@ -42,8 +42,8 @@ class Dataset:
         columns = df.columns
         df = self.preprocessor.dropUnnamedColumn(df)
         df = self.preprocessor.dropDuplicates(df)
-        df[columns[2:]] = self.preprocessor.fillMissingData(df[columns[2:]])
-        df[columns[2:]] = self.preprocessor.scaleData(df[columns[2:]])
+        df[columns[1:]] = self.preprocessor.fillMissingData(df[columns[1:]])
+        df[columns[1:]] = self.preprocessor.scaleData(df[columns[1:]])
         df = self.preprocessor.sortValuesByDate(df)
         df.set_index("Date", inplace = True)
         self._splitDataset(df, splitFactor, path, stock)

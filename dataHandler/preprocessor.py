@@ -1,5 +1,6 @@
 from sklearn import preprocessing
 import pandas as pd
+import pickle
 
 class Preprocessor:
     def __init__(self) -> None:
@@ -21,6 +22,7 @@ class Preprocessor:
     def scaleData(self, df):
         self.scaler = preprocessing.MinMaxScaler()
         df = self.scaler.fit_transform(df)
+        pickle.dump(self.scaler, open("dataHandler/scalers/scaler.pickle", "wb"))
         return df
     
     def dropDuplicates(self, df):

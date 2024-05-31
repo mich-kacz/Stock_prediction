@@ -11,7 +11,7 @@ class Engine:
     def __init__(self) -> None:
         self.dataset = Dataset()
         self.window = MainWindow(self.dataset.getWorldIndexes(), self.stateMachine)
-        self.state = "DataDownloaded" # Change to Idle in final version
+        self.state = "Idle"#"DataDownloaded" # Change to Idle in final version
         self.periodicFlag = 1
         self.stock = "RR.L" #Change in final version
 
