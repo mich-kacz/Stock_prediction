@@ -1,5 +1,6 @@
 from sklearn import preprocessing
 import pandas as pd
+import numpy as np
 import pickle
 
 class Preprocessor:
@@ -33,3 +34,14 @@ class Preprocessor:
         df = df.sort_values(by = "Date")
         return df
     
+    def addChangeFeature(self, df):
+        prices = df["Close"]
+        change = np.zeros([len(df), 1])
+        for i in range(len(df)-1):
+            increase = prices[i+1] - prices[i]
+            change[i+1] = (increase/prices[i])*100
+        df["Change[%]"] = change
+        return df
+    
+    def leaveDataSinceDate(self, df, date = '2017-01-01'):
+        return df.loc[(df['Date'] >= date)]
