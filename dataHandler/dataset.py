@@ -39,11 +39,11 @@ class Dataset:
     
     def preprocessHistData(self, path, stock, splitFactor = 0.2):
         df = pd.read_csv(path + "data/" + stock + ".csv")
-        columns = df.columns
         df = self.preprocessor.dropUnnamedColumn(df)
         df = self.preprocessor.leaveDataSinceDate(df)
         df = self.preprocessor.dropDuplicates(df)
         df = self.preprocessor.addChangeFeature(df)
+        columns = df.columns
         df[columns[1:]] = self.preprocessor.fillMissingData(df[columns[1:]])
         df[columns[1:]] = self.preprocessor.scaleData(df[columns[1:]])
         df = self.preprocessor.sortValuesByDate(df)

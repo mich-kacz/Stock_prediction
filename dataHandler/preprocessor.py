@@ -43,5 +43,5 @@ class Preprocessor:
         df["Change[%]"] = change
         return df
     
-    def leaveDataSinceDate(self, df, date = '2017-01-01'):
+    def leaveDataSinceDate(self, df, date = '2012-01-01'):
         return df.loc[(df['Date'] >= date)]
