@@ -5,7 +5,7 @@ import pickle
 
 class Preprocessor:
     def __init__(self) -> None:
-        pass
+        self.scalers = []
 
     def dropUnnamedColumn(self, df):
         if "Unnamed: 0" in df.columns:
@@ -23,8 +23,12 @@ class Preprocessor:
     def scaleData(self, df):
         self.scaler = preprocessing.MinMaxScaler()
         df = self.scaler.fit_transform(df)
-        pickle.dump(self.scaler, open("dataHandler/scalers/scaler.pickle", "wb"))
+        self.scalers.append(self.scaler)
         return df
+    
+    def saveScalers(self):
+        pickle.dump(self.scalers, open("/home/michal/Desktop/UniversityOfEssex/MasterProject/22-24_CE901-CE911-CF981-SU_kaczmarczyk_michal_p/dataHandler/scalers/scaler.pickle", "wb"))
+
     
     def dropDuplicates(self, df):
         df = df.drop_duplicates(subset="Date", keep='last', inplace=False, ignore_index=True)
