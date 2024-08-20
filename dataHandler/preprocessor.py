@@ -6,6 +6,7 @@ import pickle
 class Preprocessor:
     def __init__(self) -> None:
         self.scalers = []
+        self.scaler = None
 
     def dropUnnamedColumn(self, df):
         if "Unnamed: 0" in df.columns:

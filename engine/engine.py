@@ -1,5 +1,6 @@
 from gui.window import MainWindow
 from dataHandler.dataset import Dataset
+from predictor.predictor import Predictor
 
 import threading
 import time
@@ -43,6 +44,11 @@ class Engine:
             self.dataset.preprocessHistData("data/", self.stock)
             self.state = "DataReady"
             print("RDY")
+        elif event == "PlotPrediction":
+            predictor = Predictor(self.window.modelID, self.dataset.preprocessor.scaler)
+            predictions, real, dates, datesX = predictor(self.dataset.dataset)
+            self.window.plotGraph(dates, datesX, predictions, real)
+
         elif event == "Closing":
             print("Closing")
             self.periodicFlag = 0

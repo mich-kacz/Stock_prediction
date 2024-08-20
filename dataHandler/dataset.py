@@ -8,12 +8,14 @@ class Dataset:
     def __init__(self) -> None:
         self.downloader = DataDownloader()
         self.preprocessor = Preprocessor()
+        self.dataset = 0
 
     def getWorldIndexes(self):
         df = self.downloader.htmlData(url = self.downloader.worldIndexes, columns = self.downloader.worldIndexesColumns)
         return df
 
     def getMarketCompounds(self, marketTicker):
+        marketTicker = marketTicker.split()[0]
         url = "http://uk.finance.yahoo.com/quote/" + marketTicker + "/components"
         df = self.downloader.htmlData(url = url, columns = slice(None))
         return df
@@ -23,7 +25,13 @@ class Dataset:
         df = self.downloader.downloadCSV(url = url)
         df['Date'] = pd.to_datetime(df['Date'])
         df.set_index("Date", inplace = True)
-        print(df)
+        bl = pd.read_csv("data/Bloomberg/" + stock + ".csv").set_index("Date")
+        bl.index = pd.to_datetime(bl.index)
+        bl = bl["Price Earnings Ratio \n(P/E) \n(RR/ LN Equity)"]
+        bl = bl.resample('D')
+        bl = bl.ffill()
+        bl = bl.bfill()
+        df = df.join(bl, how="inner")
         if pathToSave != "":
             df.to_csv(pathToSave + "data/" + stock + ".csv")
         return df
@@ -40,7 +48,7 @@ class Dataset:
     def preprocessHistData(self, path, stock, splitFactor = 0.2):
         df = pd.read_csv(path + "data/" + stock + ".csv")
         df = self.preprocessor.dropUnnamedColumn(df)
-        df = self.preprocessor.leaveDataSinceDate(df)
+        df = self.preprocessor.leaveDataSinceDate(df, date='2024-01-01')
         df = self.preprocessor.dropDuplicates(df)
         df = self.preprocessor.addChangeFeature(df)
         columns = df.columns
@@ -48,7 +56,8 @@ class Dataset:
         df[columns[1:]] = self.preprocessor.scaleData(df[columns[1:]])
         df = self.preprocessor.sortValuesByDate(df)
         df.set_index("Date", inplace = True)
-        self._splitDataset(df, splitFactor, path, stock)
+        self.dataset = df
+        #self._splitDataset(df, splitFactor, path, stock) no need for spliting
 
 if __name__=="__main__":
     data = Dataset()

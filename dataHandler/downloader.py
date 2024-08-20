@@ -5,7 +5,7 @@ from io import StringIO
 
 class DataDownloader:
     worldIndexes = "https://finance.yahoo.com/world-indices"
-    worldIndexesColumns = ["Symbol", "Name"]
+    worldIndexesColumns = ["Symbol", "Price", "Change %"]#, "Name"]
 
     def __init__(self) -> None:
         pass

@@ -4,7 +4,7 @@ import pandas as pd
 # -*- coding: utf-8 -*-
 
 ################################################################################
-## Form generated from reading UI file 'guijSNBgS.ui'
+## Form generated from reading UI file 'gui copyFYykyi.ui'
 ##
 ## Created by: Qt User Interface Compiler version 6.7.0
 ##
@@ -21,11 +21,10 @@ from PySide6.QtGui import (QBrush, QColor, QConicalGradient, QCursor,
 from PySide6.QtWidgets import (QApplication, QComboBox, QFrame, QGridLayout,
     QHeaderView, QLabel, QLineEdit, QMainWindow,
     QMenuBar, QPushButton, QSizePolicy, QSpacerItem,
-    QStatusBar, QTableWidget, QTableWidgetItem, QVBoxLayout,
-    QWidget)
+    QStackedWidget, QStatusBar, QTableWidget, QTableWidgetItem,
+    QVBoxLayout, QWidget)
 
 class Ui_MainWindow(object):
-
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
@@ -33,9 +32,16 @@ class Ui_MainWindow(object):
         MainWindow.setAutoFillBackground(False)
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
-        self.gridLayout_2 = QGridLayout(self.centralwidget)
+        self.gridLayout_3 = QGridLayout(self.centralwidget)
+        self.gridLayout_3.setObjectName(u"gridLayout_3")
+        self.stackedWidget = QStackedWidget(self.centralwidget)
+        self.stackedWidget.setObjectName(u"stackedWidget")
+        self.page = QWidget()
+        self.page.setObjectName(u"page")
+        self.page.setAutoFillBackground(False)
+        self.gridLayout_2 = QGridLayout(self.page)
         self.gridLayout_2.setObjectName(u"gridLayout_2")
-        self.frame = QFrame(self.centralwidget)
+        self.frame = QFrame(self.page)
         self.frame.setObjectName(u"frame")
         self.frame.setFrameShape(QFrame.Shape.StyledPanel)
         self.frame.setFrameShadow(QFrame.Shadow.Raised)
@@ -145,6 +151,34 @@ class Ui_MainWindow(object):
 
         self.gridLayout_2.addWidget(self.frame, 0, 0, 1, 1)
 
+        self.stackedWidget.addWidget(self.page)
+        self.page_2 = QWidget()
+        self.page_2.setObjectName(u"page_2")
+        self.gridLayout_5 = QGridLayout(self.page_2)
+        self.gridLayout_5.setObjectName(u"gridLayout_5")
+        self.frame_2 = QFrame(self.page_2)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setFrameShape(QFrame.Shape.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Shadow.Raised)
+        self.verticalLayout_3 = QVBoxLayout(self.frame_2)
+        self.verticalLayout_3.setObjectName(u"verticalLayout_3")
+        self.widget = QWidget(self.frame_2)
+        self.widget.setObjectName(u"widget")
+
+        self.verticalLayout_3.addWidget(self.widget)
+
+        self.pushButton = QPushButton(self.frame_2)
+        self.pushButton.setObjectName(u"pushButton")
+
+        self.verticalLayout_3.addWidget(self.pushButton)
+
+
+        self.gridLayout_5.addWidget(self.frame_2, 0, 0, 1, 1)
+
+        self.stackedWidget.addWidget(self.page_2)
+
+        self.gridLayout_3.addWidget(self.stackedWidget, 0, 0, 1, 1)
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QMenuBar(MainWindow)
         self.menubar.setObjectName(u"menubar")
@@ -155,11 +189,18 @@ class Ui_MainWindow(object):
         MainWindow.setStatusBar(self.statusbar)
 
         self.retranslateUi(MainWindow)
+        self.tableWidget_2.itemDoubleClicked.connect(self.marketName.clear)
 
-        # setupUi
+        self.stackedWidget.setCurrentIndex(0)
+
+
+        QMetaObject.connectSlotsByName(MainWindow)
+
+    # setupUi
         self.tableWidget_2.itemClicked.connect(self.item_clicked_table_2)
         self.tableWidget.itemClicked.connect(self.item_clicked_table)
         self.NextButton.clicked.connect(self.nextButtonCLicked)
+        self.pushButton.clicked.connect(self.predictionButtonClicked)
         QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -177,11 +218,17 @@ class Ui_MainWindow(object):
         self.marketName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Type market name here", None))
         self.label.setText(QCoreApplication.translate("MainWindow", u"Stock name", None))
         self.InputStockName.setPlaceholderText(QCoreApplication.translate("MainWindow", u"Type stock ticker here", None))
+        self.pushButton.setText(QCoreApplication.translate("MainWindow", u"Prediction", None))
     # retranslateUi
 
-    def registerCallbacks(self, marketCallback, buttonCallback):
+    
+    def getModelName(self):
+        return self.comboBox.currentText()
+
+    def registerCallbacks(self, marketCallback, buttonCallback, buttonPrediction):
         self.marketCallback = marketCallback
         self.buttonCallback = buttonCallback
+        self.buttonPredictionCallback = buttonPrediction
 
 
     def item_clicked_table_2(self, item):
@@ -192,9 +239,14 @@ class Ui_MainWindow(object):
     def item_clicked_table(self, item):
         # Get the text of the clicked item
         self.InputStockName.setText(item.text())
+
     def nextButtonCLicked(self):
         if(self.InputStockName.text() != ""):
             self.buttonCallback(self.InputStockName.text())
+        self.stackedWidget.setCurrentIndex(1)
+
+    def predictionButtonClicked(self):
+        self.buttonPredictionCallback()
 
 
     def setMarketNames(self, df : pd.DataFrame):
@@ -216,3 +268,7 @@ class Ui_MainWindow(object):
             for j in range(num_cols):
                 item = QTableWidgetItem(str(df.iloc[i, j]))  # Convert each DataFrame cell to a QTableWidgetItem
                 self.tableWidget.setItem(i, j, item)
+
+    def addPlotToWidget(self, canvas):
+        self.layoutGraph = QVBoxLayout(self.widget)
+        self.layoutGraph.addWidget(canvas)
