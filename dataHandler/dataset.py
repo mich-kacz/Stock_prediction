@@ -27,7 +27,7 @@ class Dataset:
         df.set_index("Date", inplace = True)
         bl = pd.read_csv("data/Bloomberg/" + stock + ".csv").set_index("Date")
         bl.index = pd.to_datetime(bl.index)
-        bl = bl["Price Earnings Ratio \n(P/E) \n(RR/ LN Equity)"]
+        bl = bl["PE"]
         bl = bl.resample('D')
         bl = bl.ffill()
         bl = bl.bfill()

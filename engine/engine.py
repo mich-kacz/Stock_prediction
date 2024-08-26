@@ -17,12 +17,12 @@ class Engine:
         self.stock = "RR.L" #Change in final version
 
     def run(self):
-        self._t1 = threading.Thread(target=self.periodicStateCheck)
+        self._t1 = threading.Thread(target=self._periodicStateCheck)
         self._t1.daemon = True  # Daemonize the thread so it exits when the main thread exits
         self._t1.start()
         self.window.run()
 
-    def periodicStateCheck(self):
+    def _periodicStateCheck(self):
         while self.periodicFlag == 1:
             time.sleep(1)
             if self.state == "DataDownloaded":
